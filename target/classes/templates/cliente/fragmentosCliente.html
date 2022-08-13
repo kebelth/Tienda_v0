@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://thymeleaf.org/extras/spring-security">
+
+    <head th:replace="layout/plantilla :: head">
+        <title>TechShop</title>
+
+    </head>
+
+    <body>
+
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-ligth">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal"
+                                data-bs-target="#agregarCliente">
+                            <i class="fas fa-plus"></i> [[#{accion.agregar}]]
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="listadoClientes" id="clientes">
+
+            <div class="contenido">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{cliente.titulo}]]</h4>
+                            </div>
+                            <div class="card-body">
+
+
+                                <a th:href="@{/cliente/nuevo}" sec:authorize="hasRole ('ROLE_ADMIN')"> Nuevo Cliente </a>
+                                <div th:if="${clientes != null and !clientes.empty}">
+
+                                    <a th:href="@{/cliente/busqueda}">Buscar Cliente_1</a>
+
+
+                                    <table class="table table-striped">
+                                        <thead class="bg-dark text-white">
+                                            <tr>
+                                                <th>#</th>
+
+                                                <th>[[#{cliente.nombre}]]</th>
+                                                <th>[[#{cliente.limite}]]</th>
+                                                <th ></th>
+                                                <th ></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="cliente,contador: ${clientes}">
+                                                <td>[[${contador.count}]]</td>        
+
+                                                <td>[[${cliente.nombre}+' '+${cliente.apellidos}]]</td>
+
+                                                <td class='text-end'>[[${new java.text.DecimalFormat('$#,##0.00').format(cliente.credito.limite)}]]</td>
+
+                                                <td sec:authorize="hasRole ('ROLE_ADMIN')">
+                                                    <a th:href="@{/cliente/eliminar/}+${cliente.idCliente}" class='btn btn-danger'> Eliminar </a>
+                                                    <i class='fas fa-trash'></i>
+                                                </td>
+                                                <td sec:authorize="hasRole ('ROLE_ADMIN')">
+                                                    <a th:href="@{/cliente/modificar/}+${cliente.idCliente}" class='btn btn-success'> Modificar </a> </td>
+                                                <i class='fas fa-pencil'></i>       
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div th:if="${clientes == null or clientes.empty}">
+                                    No tenemos lista de clientes no mostrar...
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card bg-danger text-white text-white text-center mb-3">
+                                <div class="card-body">
+                                    <h3>[[#{cliente.limiteTotal}]]</h3>
+                                    <h4>[[${new java.text.DecimalFormat('$#,##0.00').format(999999)}]] </h4>
+                                </div>
+                            </div>
+                            <div class=' card bg-success text-white text-center mb-3'>
+                                <div class="card-body">
+                                    <h3>[[#{cliente.totalClientes}]]</h3>
+                                    <h4>
+                                        <i class="fas fa-users"></i> [[${totalClientes}]]
+                                    </h4>
+                                </div>
+                            </div>        
+                        </div>
+                    </div>
+                    </section>
+
+                    <section th:fragment="agregarCliente">
+                        <div id="agregarCliente" class="modal fade" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-info text-white">
+                                        <h5 class="modal-title">[[#{accion.agregar}]]</h5>
+                                        <button type="button" class="btn-close" data-ba-dismiss="modal"></button>
+                                    </div>
+                                   
+                                    <form th:action="@{/cliente/guardar}" method="post" th:object="${cliente}" class="was-validated">
+
+                                        <div class="modal-body">
+
+                                        <input type="hidden" name="idCliente" th:field="*{idCliente}" />
+                                        <input type="hidden" name="idCredito" th:field="*{credito.idCredito}" />
+                                    
+                                        <div class="form-group">
+                                        <label for="nombre">Nombre: </label>
+                                        <input type="text" name="nombre" required="true"/>
+                                        </div>
+                                    
+                                        <div>
+                                        <label for="apellidos">Apellidos:</label>
+                                        <input type="text" name="apellidos" required="true" />
+                                        </div>
+                                    
+                                        <div>
+                                        <label for="correo">Correo:</label>
+                                        <input type="email" name="correo" required="true" />
+                                        </div>
+                                    
+                                        <div>
+                                        <label for="telefono">Teléfono:</label>
+                                        <input type="tel" name="telefono" required="true" />
+                                        </div>
+                                        
+                                        <div>
+                                        <label for="limite">Limite de credito</label>
+                                        <input type="numbre" name="limite" required="true" />
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            
+                                        <button type="submit" name="guardar" class="btn btn-primary" >
+                                            <i class="fas fa-save"></i> [[#{accion.guaradar}]]
+                                        </button>
+                                    </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    </body>
+
+
+
+                    </html>
