@@ -1,30 +1,38 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="layout/plantilla :: head">
         <title>TechShop</title>
-        <meta charset="UTF-8">
+
     </head>
     <body>
-        <a href="index.html"></a>
-        <h1>Nuestros Clientes</h1>
-        
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="cliente : ${clientes}">
-                    <td th:text="${cliente.nombre}"></td>
-                    <td th:text="${cliente.apellidos}"></td>
-                    <td th:text="${cliente.correo}"></td>
-                    <td th:text="${cliente.telefono}"></td>
-                </tr>
-            </tbody>
-        </table>
-    </body>
-</html>
+        <header th:replace="layout/plantilla :: header"/>
+        <div class ="container"> 
+            <h2>[[#{index.titulo}]]</h2>
+
+
+
+            <div class="row row-cols-3" th:if="${articulos != null and !articulos.empty}">
+                <div class="card" th:each="articulo: ${articulos}">
+                    <div class="card-body">
+                        <h5  class="card-title">[[#{articulo.descripcion}]]</td>
+                        <h6 class="card-subtitle mf-2 text-muted text-end" [[${new java.text.DecimalFormat('$#'##0.00').format(articulo.precio)}]]></td>
+            
+                        
+                        <img src="/images/torpedo.jpg" alt=""/>
+                            <a class="card-link" th:href="@{/carrito/agregar/} + ${articulo.idArticulo}">[[#{accion.agregar}]]</a>
+                            <p class="card-text">[[${articulo.detalle}]]</p>
+
+                       
+                    </div>
+            
+                </div>
+            </div>
+            <div th:if="${articulos == null or articulos.empty}">
+                [[#{articulo.no_mostrar}]]
+            </div>
+            </div>
+            <footer th:replace="layout/plantilla :: footer" />
+            </body>
+            
+            </html>

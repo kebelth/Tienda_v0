@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout/plantilla :: head">
+        <title>TechShop</title>
+    
+    </head>
+    <body>
+        <header th:replace="layout/plantilla :: header"/>
+        <div class ="contenido"> 
+        <h2>Listado de Categorias</h2>
+        <a th:href="@{/categoria/nuevo}"  sec:authorize="hasRole ('ROLE_ADMIN')" >Nuevo Categoria</a>
+        <div th:if="${categorias != null and !categorias.empty}">
+        <table border="2">
+            <thead>
+                <tr>
+                    <th>idCategoria</th>
+                    <th>descripcion</th>
+                    <th> activo</th>
+                    <th  sec:authorize="hasRole ('ROLE_ADMIN')">Eliminar</th>
+                    <th  sec:authorize="hasRole ('ROLE_ADMIN')" >Modificar</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="categoria: ${categorias}">
+                    <td th:text= "${categoria.idCategoria}"></td>
+                    <td th:text= "${categoria.descripcion}"></td>
+                   <td style="text-align: center"><input type="checkbox" name="activo" th:checked="${categoria.activo}" disabled="true"></td>
+                     <td  sec:authorize="hasRole ('ROLE_ADMIN')"><a th:href="@{/categoria/eliminar/} + ${categoria.idCategoria}"> Eliminar </a> </td>
+                    <td  sec:authorize="hasRole ('ROLE_ADMIN')"><a th:href="@{/categoria/modificar/} + ${categoria.idCategoria}"> Modificar </a> </td>
+                   
+                </tr>
+            </tbody>
+        </table>
+       </div>
+        <div th:if="${categorias == null or categorias.empty}">
+                No tenemos lista de categorias no mostrar...
+                </div>
+        </div> 
+        <footer  th:replace="layout/plantilla :: footer"/> 
+        </body>
+</html>
